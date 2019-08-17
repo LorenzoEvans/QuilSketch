@@ -5,7 +5,12 @@
 (defn f [t]
   (let [r (* 200 (q/sin t) (q/cos t))]
     [(* r (q/sin (* t 0.5)))
-     (* r (q/cos (* t 0.5)))]))
+     (* r (q/cos (* t 4.2)))]))
+
+(defn g [t]
+  (let [r (* 50 (q/sin t) (q/cos t))]
+    [(* r (q/sin (+ t 0.5)))
+     (* r (q/cos (+ t 0.2)))]))
 
 (defn drawer []
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
@@ -15,14 +20,14 @@
       (q/line (f t)
               (f (+ t 0.1)))
       (q/line (f t)
-              (f (+ t 3.71))))))
+              (f (+ t 0.1))))))
 
 ; 'setup' is a cousin of 'draw' function
 ; setup initialises sketch and it is called only once
 ; before draw called for the first time
 (defn setup []
   ; draw will be called 60 times per second
-  (q/frame-rate 60)
+  (q/frame-rate 190)
   (q/height 190)
   (q/width)
   (q/stroke 89 56 33)
