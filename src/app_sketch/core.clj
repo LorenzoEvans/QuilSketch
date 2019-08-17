@@ -1,5 +1,5 @@
 (ns app-sketch.core
-  (:require [quil.core :as q :refer defsketch]
+  (:require [quil.core :as q]
             [quil.middleware :as m]))
 
 
@@ -58,10 +58,10 @@
   :size [500 500]
   :draw flower)
 
-(defn f [t]
-  (let [r (* 200 (q/sin t) (q/cos t))]
-    [(* r (q/sin (* t 0.2)))
-     (* r (q/cos (* t 0.2)))]))
+(defn f [t])
+(let [r (* 200 (q/sin t) (q/cos t))]
+  [(* r (q/sin (* t 0.2)))
+   (* r (q/cos (* t 0.2)))])
 
 (defn f3 [t]
   [(* t (q/sin t))
@@ -79,3 +79,18 @@
   (q/background 235)
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
    (draw-plots f3 0 140 0.31)))
+
+(defn draw []
+  (q/with-translation [(/ (q/width) 2) (/ (q/width) 2)]
+    (let [t (/ (q/frame-count) 10)]
+      (q/line (f t)
+              (f (+ t 0.1))))))
+
+(defn setup []
+  (q/frame-rate 60)
+  (q/background 255))
+
+(q/defsketch f_ani
+  :size [450 450]
+  :setup setup
+  :draw draw)
