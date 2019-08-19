@@ -4,13 +4,13 @@
 
 (defn f [t]
   (let [r (* 200 (q/sin t) (q/cos t))]
-    [(* r (q/sin (* t 0.5)))
-     (* r (q/cos (* t 4.2)))]))
+    [(* r (q/tan (* t 0.5)))
+     (* r (q/cos (* t 4.2)))])
 
-(defn g [t]
-  (let [r (* 50 (q/sin t) (q/cos t))]
-    [(* r (q/sin (+ t 0.5)))
-     (* r (q/cos (+ t 0.2)))]))
+  (defn g [t]
+    (let [r (* 50 (q/sin t) (q/cos t))]
+      [(* r (q/sin (+ t 0.5)))
+       (* r (q/cos (+ t 0.2)))])))
 
 (defn drawer []
   (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
@@ -27,7 +27,7 @@
 ; before draw called for the first time
 (defn setup []
   ; draw will be called 60 times per second
-  (q/frame-rate 290)
+  (q/frame-rate 110)
   (q/height 190)
   (q/width)
   (q/stroke 89 56 33)
@@ -36,22 +36,28 @@
   (q/background 255))
 
 
+(defn alternated [t]
+  (let [r (* 200 (q/cos t) (q/sin t))]
+    [(* r (q/atan (* t 7.2)))
+     (* r (q/sq (* t 3.2)))]))
+(defn flower-tut [t]
+  (let [r (* 400 (q/sin t) (q/cos t))]
+    [(* r (q/tan (* t 0.2)))
+     (* r (q/cos (* t 0.2)))]))
 
-(defn flower [t]
-  (let [r (* 500 (q/sin t) (q/cos t))]
-    [(* r (q/sin (* t 0.2)))
-     (* r (q/cos (* t 2)))]))
 
-(defn flower-line [t]
-  (let [r (* 200 (q/sin t) (q/cos t))]))
+(defn alternated [t]
+  (let [r (* 200 (q/tan t) (q/sin t))]
+    [(* r (q/atan (* t 7.2)))
+     (* r (q/sq (* t 3.2)))]))
 
 
 (defn draw-animation []
-  (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
+  (q/with-translation [(/ (q/width) 4) (/ (q/height) 2)]
     (let [t (/ (q/frame-count) 10)]
       ; set color for line
-      (q/stroke (mod t 10) 30 1)
-      (q/line (flower t) (flower (+ t 0.5))))))
+      (q/stroke (mod t 10) 30 210 134)
+      (q/line (flower t) (alternated (+ t 0.1))))))
 
 (q/defsketch trigonometry
   :size [900 900]
