@@ -11,7 +11,15 @@
 (def grid 20)
 
 (def state {:matrix (vec
-                     (repeatedly (* grid-size grid-size) #(rand-int 2)))})
+                     (repeatedly (* grid grid) #(rand-int 2)))})
+
+(defn interval []
+  (let [vec
+        (vec (repeatedly (* grid grid)  #(rand-int 4)))]
+    vec))
+
+(defn interstate [s-vec num-vec]
+  (interleave num-vec s-vec))
 
 (defn setup []
   (q/frame-rate 10)
@@ -41,6 +49,17 @@
       (if (or (> alive-n 4) (< alive-n 3) 0 1)))))
 
 
+(defn alt-cells [idx val mtrx]
+  (let [alive-n (get (freqiences (neighbors idx mtrx)) 1 0)]
+    (cond
+      (= val 1
+         (cond
+           (or (> alive-n 3) (< alive-n 2)) 0
+           (= alive-n 3) 1)))))
+
+
+
+
 (defn update-cells [state]
   (assoc state :matrix
     (vec
@@ -65,6 +84,6 @@
   :host "host"
   :size [600 600]
   :setup setup
-  :update update-state
+  :update new-cells
   :draw animate
   :middleware [m/fun-mode])
