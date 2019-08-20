@@ -11,11 +11,11 @@
 (def grid 20)
 
 (def state {:matrix (vec
-                     (repeatedly (* grid grid) #(rand-int 2)))})
+                     (repeatedly (* grid grid) #(rand-int 3)))})
 
 (defn interval []
   (let [vec
-        (vec (repeatedly (* grid grid)  #(rand-int 4)))]
+        (vec (repeatedly (* grid (/ grid 2))  #(rand-int 255)))]
     vec))
 
 (defn interstate [s-vec num-vec]
@@ -45,17 +45,34 @@
   (let [alive-n (get (frequencies (neighbors idx mtrx)) 1 0)]
     (if (= 1 val)
       (if (or (> alive-n 3) (< alive-n 2)) 0 1)
-      (if (= 3 alive-n) 1 0)
-      (if (or (> alive-n 4) (< alive-n 3) 0 1)))))
+      (if (= 3 alive-n) 1 0))))
+
 
 
 (defn alt-cells [idx val mtrx]
-  (let [alive-n (get (freqiences (neighbors idx mtrx)) 1 0)]
+  (let [alive-n (get (frequencies (neighbors idx mtrx)) 1 0)]
     (cond
       (= val 1
          (cond
            (or (> alive-n 3) (< alive-n 2)) 0
-           (= alive-n 3) 1)))))
+           (= alive-n 3) 1
+           (or (> alive-n 4) (< alive-n 3)) 0))
+      (= val 0
+        (cond
+          (or (> alive-n 3) (< alive-n 2)) 0
+          (= alive-n 3) 1
+          (or (> alive-n 4) (< alive-n 3)) 0))
+      (= val 2
+        (cond
+          (or (> alive-n 3) (< alive-n 2)) 0
+          (= alive-n 3) 1
+          (or (> alive-n 4) (< alive-n 3)) 0))
+      (= val 3
+        (cond
+          (or (> alive-n 3) (< alive-n 2)) 0
+          (= alive-n 3) 1
+          (or (> alive-n 4) (< alive-n 3)) 0)))))
+
 
 
 
@@ -68,22 +85,20 @@
        (:matrix state)))))
 
 (defn animate [state]
-  (q/background (rand-int 255))
+  (q/background 255)
   (let [cell (quot (q/width) grid)]
     (doseq [[i v] (map-indexed vector (:matrix state))]
       (let [multiplier (int (/ i grid))
             x (* cell (- i (* multiplier grid)))
             y (* cell multiplier)]
         (q/fill
-         (if (= 1 v) 255 0)
-         (if (= 2 v) 186 255)
-         (if (= 3 v) 120 44))
+         (if (= 1 v) (rand-nth (interval)) 0)
+         (if (= v 2) (rand-nth (interval)) 255))
         (q/rect x y cell cell)))))
 
 (q/defsketch conway
-  :host "host"
   :size [600 600]
   :setup setup
-  :update new-cells
+  :update update-cells
   :draw animate
   :middleware [m/fun-mode])
